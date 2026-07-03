@@ -1,0 +1,271 @@
+<?xml version="1.0" encoding="utf-8"?>
+<widget
+    id="mendix.enterpriseprintwidget.EnterprisePrintWidget"
+    pluginWidget="true"
+    needsEntityContext="false"
+    offlineCapable="true"
+    supportedPlatform="Web"
+    xmlns="http://www.mendix.com/widget/1.0/"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.mendix.com/widget/1.0/ ../node_modules/mendix/custom_widget.xsd">
+
+    <name>Enterprise Print</name>
+
+    <description>
+        Enterprise-grade print engine for Mendix applications with accurate CSS rendering,
+        responsive layout support, automatic scaling and high-quality browser printing.
+    </description>
+
+    <icon></icon>
+
+    <properties>
+
+        <!-- ========================================================= -->
+        <!-- General -->
+        <!-- ========================================================= -->
+
+        <propertyGroup caption="General">
+
+            <property
+                key="selector"
+                type="string"
+                required="false"
+                defaultValue=".print-container">
+
+                <caption>Target Selector</caption>
+
+                <description>
+                    CSS selector of the HTML element to print.
+                    Leave empty to print the entire page.
+                </description>
+
+            </property>
+
+        </propertyGroup>
+
+        <!-- ========================================================= -->
+        <!-- Paper -->
+        <!-- ========================================================= -->
+
+        <propertyGroup caption="Paper">
+
+            <property
+                key="paperSize"
+                type="enumeration"
+                defaultValue="A4">
+
+                <caption>Paper Size</caption>
+
+                <description>
+                    Select the paper size.
+                </description>
+
+                <enumerationValues>
+                    <enumerationValue key="A4">A4</enumerationValue>
+                    <enumerationValue key="Letter">Letter</enumerationValue>
+                </enumerationValues>
+
+            </property>
+
+            <property
+                key="orientation"
+                type="enumeration"
+                defaultValue="portrait">
+
+                <caption>Orientation</caption>
+
+                <description>
+                    Select the paper orientation.
+                </description>
+
+                <enumerationValues>
+                    <enumerationValue key="portrait">Portrait</enumerationValue>
+                    <enumerationValue key="landscape">Landscape</enumerationValue>
+                </enumerationValues>
+
+            </property>
+
+            <property
+                key="scale"
+                type="integer"
+                defaultValue="100">
+
+                <caption>Scale (%)</caption>
+
+                <description>
+                    Scale between 50 and 200 percent.
+                </description>
+
+            </property>
+
+            <property
+                key="marginTop"
+                type="integer"
+                defaultValue="10">
+
+                <caption>Top Margin (mm)</caption>
+
+                <description>
+                    Top page margin.
+                </description>
+
+            </property>
+
+            <property
+                key="marginRight"
+                type="integer"
+                defaultValue="10">
+
+                <caption>Right Margin (mm)</caption>
+
+                <description>
+                    Right page margin.
+                </description>
+
+            </property>
+
+            <property
+                key="marginBottom"
+                type="integer"
+                defaultValue="10">
+
+                <caption>Bottom Margin (mm)</caption>
+
+                <description>
+                    Bottom page margin.
+                </description>
+
+            </property>
+
+            <property
+                key="marginLeft"
+                type="integer"
+                defaultValue="10">
+
+                <caption>Left Margin (mm)</caption>
+
+                <description>
+                    Left page margin.
+                </description>
+
+            </property>
+
+        </propertyGroup>
+
+        <!-- ========================================================= -->
+        <!-- Rendering -->
+        <!-- ========================================================= -->
+
+        <propertyGroup caption="Rendering">
+
+            <property
+                key="printBackground"
+                type="boolean"
+                defaultValue="true">
+
+                <caption>Print Background</caption>
+
+                <description>
+                    Print background colors and images.
+                </description>
+
+            </property>
+
+            <property
+                key="waitImages"
+                type="boolean"
+                defaultValue="true">
+
+                <caption>Wait For Images</caption>
+
+                <description>
+                    Wait until all images are loaded before printing.
+                </description>
+
+            </property>
+
+            <property
+                key="waitFonts"
+                type="boolean"
+                defaultValue="true">
+
+                <caption>Wait For Fonts</caption>
+
+                <description>
+                    Wait until all fonts are loaded before printing.
+                </description>
+
+            </property>
+
+        </propertyGroup>
+
+        <!-- ========================================================= -->
+        <!-- Button -->
+        <!-- ========================================================= -->
+
+        <propertyGroup caption="Button">
+
+            <property
+                key="printButtonCaption"
+                type="string"
+                defaultValue="Print">
+
+                <caption>Button Caption</caption>
+
+                <description>
+                    Caption displayed on the print button.
+                </description>
+
+            </property>
+
+            <property
+                key="printButtonIcon"
+                type="icon">
+
+                <caption>Button Icon</caption>
+
+                <description>
+                    Optional icon displayed on the print button.
+                </description>
+
+            </property>
+
+        </propertyGroup>
+
+        <!-- ========================================================= -->
+        <!-- Advanced -->
+        <!-- ========================================================= -->
+
+        <propertyGroup caption="Advanced">
+
+            <property
+                key="debugMode"
+                type="boolean"
+                defaultValue="false">
+
+                <caption>Debug Mode</caption>
+
+                <description>
+                    Enable console logging for troubleshooting.
+                </description>
+
+            </property>
+
+            <property
+                key="printDelay"
+                type="integer"
+                defaultValue="300">
+
+                <caption>Print Delay (ms)</caption>
+
+                <description>
+                    Delay before opening the browser print dialog.
+                </description>
+
+            </property>
+
+        </propertyGroup>
+
+    </properties>
+
+</widget>

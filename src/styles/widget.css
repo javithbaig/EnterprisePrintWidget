@@ -1,0 +1,19 @@
+.toolbar {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+.print-button {
+  padding: 8px 14px;
+  background-color: #0a6cef;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.print-button:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+}
