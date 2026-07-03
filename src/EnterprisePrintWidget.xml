@@ -9,11 +9,10 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://www.mendix.com/widget/1.0/ ../node_modules/mendix/custom_widget.xsd">
 
-    <name>Enterprise Print</name>
+    <name>Enterprise Document Engine</name>
 
     <description>
-        Enterprise-grade print engine for Mendix applications with accurate CSS rendering,
-        responsive layout support, automatic scaling and high-quality browser printing.
+        Enterprise-grade document rendering engine for Mendix applications with high-fidelity browser printing, responsive layout support, CSS preservation, and future support for PDF, image, and HTML export.
     </description>
 
     <icon></icon>

@@ -3,13 +3,16 @@ import { EnterprisePrintWidgetContainerProps } from "../typings/EnterprisePrintW
 import { PrintButton } from "./components/PrintButton";
 import { usePrint } from "./hooks/usePrint";
 import { PrintOptions } from "./models/PrintOptions";
+import { CssService } from "./engine/css/CssService";
 
 export function EnterprisePrintWidget(
     props: EnterprisePrintWidgetContainerProps
 ): ReactElement {
 
     const { print } = usePrint();
-
+    const css = new CssService().collect();
+    console.log(css.links);
+    console.log(css.styles);
     const handleClick = async (): Promise<void> => {
 
         const selector = props.selector?.trim() || ".print-container";

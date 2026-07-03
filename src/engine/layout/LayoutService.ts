@@ -1,7 +1,7 @@
-import { PAPER_SIZES } from "../constants/PaperSizes";
-import { PrintOptions } from "../models/PrintOptions";
-import { Paper } from "../models/Paper";
-import { UnitConverter } from "../utils/UnitConverter";
+import { PAPER_SIZES } from "../../constants/PaperSizes";
+import { PrintOptions } from "../../models/PrintOptions";
+import { Paper } from "../common/Paper";
+import { UnitConverter } from "../../utils/UnitConverter";
 //import { Orientation } from "../enums/Orientation";
 
 export class LayoutService {

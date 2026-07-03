@@ -1,7 +1,7 @@
 import {
     OrientationEnum,
     PaperSizeEnum
-} from "../../typings/EnterprisePrintWidgetProps";
+} from "../../../typings/EnterprisePrintWidgetProps";
 
 export interface Paper {
 

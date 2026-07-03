@@ -1,23 +1,16 @@
 import { useMemo } from "react";
-import { PrintService } from "../services/PrintService";
-import { ServiceContainer } from "../services/ServiceContainer";
+
+import { BrowserPrint } from "../engine/outputs/BrowserPrint";
 
 export function usePrint() {
 
-    const services = useMemo(
-        () => new ServiceContainer(),
+    const printService = useMemo(
+        () => new BrowserPrint(),
         []
     );
 
-    const printService = useMemo(
-        () => new PrintService(services),
-        [services]
-    );
-
     return {
-
         print: printService.print.bind(printService)
-
     };
 
 }
