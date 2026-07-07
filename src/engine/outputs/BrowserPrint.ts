@@ -1,58 +1,54 @@
-import { CloneService } from "../clone/CloneService";
-import { CssService } from "../css/CssService";
-import { FrameService } from "../frame/FrameService";
-import { LayoutService } from "../layout/LayoutService";
-
 import { PrintOptions } from "../../models/PrintOptions";
 
+import { FrameService } from "../frame/FrameService";
+
+import { RenderPipeline } from "../pipeline/RenderPipeline";
+import { RenderContext } from "../pipeline/RenderContext";
+
+import { CloneStage } from "../pipeline/stages/CloneStage";
+import { CssStage } from "../pipeline/stages/CssStage";
+import { LayoutStage } from "../pipeline/stages/LayoutStage";
+import { FrameStage } from "../pipeline/stages/FrameStage";
+import { OutputStage } from "../pipeline/stages/OutputStage";
+
 /**
- * Browser print output.
- *
- * Responsible for rendering the cloned document
- * into an isolated iframe and invoking the browser
- * print dialog.
+ * Browser output implementation.
  */
 export class BrowserPrint {
 
-    constructor(
-        private readonly cloneService = new CloneService(),
-        private readonly cssService = new CssService(),
-        private readonly layoutService = new LayoutService(),
-        private readonly frameService = new FrameService()
-    ) {}
-
     /**
-     * Print an HTML element.
-     *
-     * @param source HTML element to print.
-     * @param options Print options.
+     * Prints an HTML element.
      */
     public async print(
         source: HTMLElement,
         options: PrintOptions
     ): Promise<void> {
+        console.log("BrowserPrint.print()");
+        const frameService = new FrameService();
 
-        console.log("Enterprise Document Engine");
+        const pipeline = new RenderPipeline([
 
-        // Clone DOM
-        const clonedRoot = this.cloneService.clone(source);
+            new CloneStage(),
 
-        // Collect CSS
-        const cssBundle = this.cssService.collect();
+            new CssStage(),
 
-        // Calculate paper/layout
-        const paper = this.layoutService.getPaper(options);
+            new LayoutStage(),
 
-        // Build iframe
-        await this.frameService.build(
-            clonedRoot,
-            cssBundle,
-            paper,
+            new FrameStage(frameService),
+
+            new OutputStage(frameService)
+
+        ]);
+
+        const context: RenderContext = {
+
+            source,
+
             options
-        );
 
-        // Print
-        await this.frameService.print();
+        };
+
+        await pipeline.execute(context);
 
     }
 

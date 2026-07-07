@@ -1,14 +1,24 @@
-import { CssBundle } from "../common/CssBundle";
+import { CssBundle } from "../css/models/CssBundle";
 import { Paper } from "../common/Paper";
 import { PrintOptions } from "../../models/PrintOptions";
+import { FrameBuilder } from "./FrameBuilder";
+import { FrameStyler } from "./FrameStyler";
+import { AssetLoader } from "./AssetLoader";
+import { FramePrinter } from "./FramePrinter"; 
+import { FontLoader } from "./FontLoader"; 
 
 export class FrameService {
 
-    private iframe: HTMLIFrameElement | null = null;
+    private readonly builder = new FrameBuilder();
 
-    /**
-     * Creates the print iframe and injects the cloned document.
-     */
+    private readonly styler = new FrameStyler();
+
+    private readonly assets = new AssetLoader();
+
+    private readonly fonts = new FontLoader();
+
+    private readonly printer = new FramePrinter();
+
     public async build(
         root: HTMLElement,
         css: CssBundle,
@@ -16,157 +26,38 @@ export class FrameService {
         options: PrintOptions
     ): Promise<void> {
 
-        // Remove previous iframe
-        this.destroy();
+        const frame = this.builder.create();
 
-        this.iframe = document.createElement("iframe");
-
-        this.iframe.style.position = "fixed";
-        this.iframe.style.right = "0";
-        this.iframe.style.bottom = "0";
-        this.iframe.style.width = "0";
-        this.iframe.style.height = "0";
-        this.iframe.style.border = "0";
-        this.iframe.style.visibility = "hidden";
-
-        document.body.appendChild(this.iframe);
-
-        const frameDocument =
-            this.iframe.contentDocument;
-
-        if (!frameDocument) {
-            throw new Error("Unable to access print iframe.");
-        }
-
-        frameDocument.open();
-
-        frameDocument.write(`
-<!DOCTYPE html>
-<html>
-<head>
-<meta charset="utf-8">
-<title>Enterprise Document Engine</title>
-</head>
-<body></body>
-</html>
-        `);
-
-        frameDocument.close();
-
-        this.injectCss(frameDocument, css);
-
-        this.applyPaper(frameDocument, paper, options);
-
-        frameDocument.body.appendChild(
-            root.cloneNode(true)
+        this.styler.apply(
+            frame.document,
+            css,
+            paper,
+            options
         );
 
+        const clone = root.cloneNode(true) as HTMLElement;
+
+        frame.document.body.appendChild(clone);
+
+        // Wait for images, canvas, svg, etc.
+        await this.assets.wait(clone);
+
+        // Wait for fonts in the PRINT FRAME
+        await this.fonts.wait(frame.document);
+
+        this.printer.setFrame(frame);
+
     }
 
-    /**
-     * Opens browser print dialog.
-     */
     public async print(): Promise<void> {
 
-        if (!this.iframe) {
-            return;
-        }
-
-        const win = this.iframe.contentWindow;
-
-        if (!win) {
-            return;
-        }
-
-        await new Promise(resolve => setTimeout(resolve, 300));
-
-        win.focus();
-
-        win.print();
+        await this.printer.print();
 
     }
 
-    /**
-     * Removes previous iframe.
-     */
     public destroy(): void {
 
-        if (!this.iframe) {
-            return;
-        }
-
-        this.iframe.remove();
-
-        this.iframe = null;
-
-    }
-
-    /**
-     * Inject collected CSS.
-     */
-    private injectCss(
-        documentRef: Document,
-        css: CssBundle
-    ): void {
-
-        css.links.forEach(link => {
-
-            documentRef.head.appendChild(
-                link.cloneNode(true)
-            );
-
-        });
-
-        css.styles.forEach(style => {
-
-            documentRef.head.appendChild(
-                style.cloneNode(true)
-            );
-
-        });
-
-    }
-
-    /**
-     * Applies paper size and margins.
-     */
-    private applyPaper(
-        documentRef: Document,
-        paper: Paper,
-        options: PrintOptions
-    ): void {
-
-        const style = documentRef.createElement("style");
-
-        style.textContent = `
-@page {
-    size: ${paper.size} ${paper.orientation};
-    margin:
-        ${options.marginTop}mm
-        ${options.marginRight}mm
-        ${options.marginBottom}mm
-        ${options.marginLeft}mm;
-}
-
-html,
-body{
-
-    margin:0;
-
-    padding:0;
-
-    width:100%;
-
-    overflow:visible;
-
-    print-color-adjust:exact;
-
-    -webkit-print-color-adjust:exact;
-
-}
-`;
-
-        documentRef.head.appendChild(style);
+        this.printer.destroy();
 
     }
 

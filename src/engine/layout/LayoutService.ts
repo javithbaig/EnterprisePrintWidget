@@ -3,8 +3,17 @@ import { PrintOptions } from "../../models/PrintOptions";
 import { Paper } from "../common/Paper";
 import { UnitConverter } from "../../utils/UnitConverter";
 //import { Orientation } from "../enums/Orientation";
+import { ResponsiveLayout } from "./ResponsiveLayout";
+import { OverflowHandler } from "./OverflowHandler";
+import { ImageLayout } from "./ImageLayout";
+import { TableLayout } from "./TableLayout";
 
 export class LayoutService {
+
+    private readonly responsive = new ResponsiveLayout();
+    private readonly overflow = new OverflowHandler();
+    private readonly images = new ImageLayout();
+    private readonly tables = new TableLayout();
 
     public getPaper(options: PrintOptions): Paper {
 
@@ -42,6 +51,7 @@ export class LayoutService {
         };
 
     }
+    
 
     public getPrintableWidthPx(
         paper: Paper
@@ -67,8 +77,8 @@ export class LayoutService {
  * Detects whether the cloned content exceeds the printable width.
  */
     public detectOverflow(
-        root: HTMLElement,
-        paper: Paper
+    root: HTMLElement,
+    paper: Paper
     ): boolean {
 
         const printableWidth =
@@ -81,20 +91,66 @@ export class LayoutService {
     public calculateScale(
     root: HTMLElement,
     paper: Paper
-): number {
+    ): number {
 
-    const printableWidth =
-        this.getPrintableWidthPx(paper);
+        const printableWidth =
+            this.getPrintableWidthPx(paper);
 
-    const contentWidth =
-        root.scrollWidth;
+        const contentWidth =
+            root.scrollWidth;
 
-    if (contentWidth <= printableWidth) {
-        return 1;
+        if (contentWidth <= printableWidth) {
+            return 1;
+        }
+
+        return printableWidth / contentWidth;
+
     }
 
-    return printableWidth / contentWidth;
+    public fitsOnPage(
+        root: HTMLElement,
+        paper: Paper
+    ): boolean {
 
-}
+        const width =
+            this.getPrintableWidthPx(paper);
+
+        const height =
+            this.getPrintableHeightPx(paper);
+
+        return (
+            root.scrollWidth <= width &&
+            root.scrollHeight <= height
+        );
+
+    }
+
+    public needsScaling(
+        root: HTMLElement,
+        paper: Paper
+    ): boolean {
+
+        return this.detectOverflow(
+            root,
+            paper
+        );
+
+    }
+
+    public prepare(
+        root: HTMLElement
+    ): void {
+
+        this.responsive.process(root);
+
+        this.overflow.process(root);
+
+        this.images.process(root);
+
+        this.tables.process(root);
+
+    }
+
+    
 
 }

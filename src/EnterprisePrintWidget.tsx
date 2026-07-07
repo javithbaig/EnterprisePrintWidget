@@ -1,20 +1,22 @@
+console.log("=== MODULE LOADED ===");
 import { ReactElement } from "react";
 import { EnterprisePrintWidgetContainerProps } from "../typings/EnterprisePrintWidgetProps";
 import { PrintButton } from "./components/PrintButton";
 import { usePrint } from "./hooks/usePrint";
 import { PrintOptions } from "./models/PrintOptions";
 import { CssService } from "./engine/css/CssService";
-
+console.log("=== IMPORTS COMPLETE ===");
 export function EnterprisePrintWidget(
+    
     props: EnterprisePrintWidgetContainerProps
 ): ReactElement {
-
+    console.log("=== COMPONENT START ===");
     const { print } = usePrint();
     const css = new CssService().collect();
     console.log(css.links);
     console.log(css.styles);
     const handleClick = async (): Promise<void> => {
-
+        console.log("===== PRINT BUTTON CLICKED =====");
         const selector = props.selector?.trim() || ".print-container";
 
         const element = document.querySelector(selector);

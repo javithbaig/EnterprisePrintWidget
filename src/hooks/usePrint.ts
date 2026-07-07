@@ -1,16 +1,18 @@
 import { useMemo } from "react";
 
-import { BrowserPrint } from "../engine/outputs/BrowserPrint";
+import { EnterpriseDocumentEngine } from "../engine/EnterpriseDocumentEngine";
 
 export function usePrint() {
 
-    const printService = useMemo(
-        () => new BrowserPrint(),
+    const engine = useMemo(
+        () => new EnterpriseDocumentEngine(),
         []
     );
 
     return {
-        print: printService.print.bind(printService)
+
+        print: engine.print.bind(engine)
+
     };
 
 }
