@@ -11,20 +11,37 @@ export class FrameStage implements IPipelineStage {
     public async execute(
         context: RenderContext
     ): Promise<void> {
-        console.log("FrameStage");
+
+        console.log(
+            "FrameStage"
+        );
+
         if (!context.clone) {
-            throw new Error("Clone is missing.");
+
+            throw new Error(
+                "FrameStage: clone is missing."
+            );
+
         }
 
         if (!context.css) {
-            throw new Error("CSS bundle is missing.");
+
+            throw new Error(
+                "FrameStage: CSS bundle is missing."
+            );
+
         }
 
         if (!context.paper) {
-            throw new Error("Paper definition is missing.");
+
+            throw new Error(
+                "FrameStage: paper configuration is missing."
+            );
+
         }
 
         await this.frameService.build(
+            context.source,
             context.clone,
             context.css,
             context.paper,

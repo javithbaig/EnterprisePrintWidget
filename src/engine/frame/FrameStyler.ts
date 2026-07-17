@@ -11,9 +11,15 @@ export class FrameStyler {
         options: PrintOptions
     ): void {
 
-        this.injectLinks(documentRef, css);
+        this.injectLinks(
+            documentRef,
+            css
+        );
 
-        this.injectStyles(documentRef, css);
+        this.injectStyles(
+            documentRef,
+            css
+        );
 
         this.injectPageStyle(
             documentRef,
@@ -28,10 +34,22 @@ export class FrameStyler {
         css: CssBundle
     ): void {
 
-        css.links.forEach(link => {
+        css.links.forEach(source => {
+
+            const link =
+                source.cloneNode(
+                    true
+                ) as HTMLLinkElement;
+
+            /*
+             * Preserve the absolute URL from
+             * the original application document.
+             */
+            link.href =
+                source.href;
 
             documentRef.head.appendChild(
-                link.cloneNode(true)
+                link
             );
 
         });
@@ -59,25 +77,41 @@ export class FrameStyler {
         options: PrintOptions
     ): void {
 
-        const style = documentRef.createElement("style");
+        const style =
+            documentRef.createElement(
+                "style"
+            );
 
         style.textContent = `
-@page{
-size:${paper.size} ${paper.orientation};
-margin:${options.marginTop}mm ${options.marginRight}mm ${options.marginBottom}mm ${options.marginLeft}mm;
+@page {
+    size: ${paper.size} ${paper.orientation};
+
+    margin:
+        ${options.marginTop}mm
+        ${options.marginRight}mm
+        ${options.marginBottom}mm
+        ${options.marginLeft}mm;
 }
 
-html,body{
-margin:0;
-padding:0;
-width:100%;
-overflow:visible;
--webkit-print-color-adjust:exact;
-print-color-adjust:exact;
+html,
+body {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    overflow: visible;
+}
+
+html,
+body,
+body * {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
 }
 `;
 
-        documentRef.head.appendChild(style);
+        documentRef.head.appendChild(
+            style
+        );
 
     }
 

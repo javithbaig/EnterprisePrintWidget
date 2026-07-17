@@ -1,40 +1,66 @@
-import { Logger } from "../../utils/Logger";
-
 import { ImageLoader } from "./ImageLoader";
-//import { FontLoader } from "./FontLoader";
-import { CanvasLoader } from "./CanvasLoader";
-import { SvgLoader } from "./SvgLoader";
-import { VideoLoader } from "./VideoLoader";
+import { FontLoader } from "./FontLoader";
+import { StylesheetLoader } from "./StylesheetLoader";
 
 export class AssetLoader {
 
-    private readonly imageLoader = new ImageLoader();
+    private readonly stylesheetLoader =
+        new StylesheetLoader();
 
-    //private readonly fontLoader = new FontLoader();
+    private readonly imageLoader =
+        new ImageLoader();
 
-    private readonly canvasLoader = new CanvasLoader();
+    private readonly fontLoader =
+        new FontLoader();
 
-    private readonly svgLoader = new SvgLoader();
+    public async wait(
+        root: HTMLElement,
+        document: Document
+    ): Promise<void> {
 
-    private readonly videoLoader = new VideoLoader();
+        console.log(
+            "===== AssetLoader.wait START ====="
+        );
 
-    public async wait(root: HTMLElement): Promise<void> {
+        console.log(
+            "Starting StylesheetLoader"
+        );
 
-        Logger.group("AssetLoader");
+        await this.stylesheetLoader.wait(
+            document
+        );
 
-        await this.imageLoader.wait(root);
+        console.log(
+            "Stylesheets loaded"
+        );
 
-        //await this.fontLoader.wait(documentRef);
+        console.log(
+            "Starting ImageLoader"
+        );
 
-        await this.canvasLoader.wait(root);
+        await this.imageLoader.wait(
+            root
+        );
 
-        await this.svgLoader.wait(root);
+        console.log(
+            "Images loaded"
+        );
 
-        await this.videoLoader.wait(root);
+        console.log(
+            "Starting FontLoader"
+        );
 
-        Logger.info("All assets loaded.");
+        await this.fontLoader.wait(
+            document
+        );
 
-        Logger.groupEnd();
+        console.log(
+            "Fonts loaded"
+        );
+
+        console.log(
+            "===== All assets loaded ====="
+        );
 
     }
 

@@ -2,7 +2,7 @@ import { PrintFrame } from "../common/PrintFrame";
 
 export class FramePrinter {
 
-    private frame: PrintFrame | null = null;
+    private frame?: PrintFrame;
 
     public setFrame(
         frame: PrintFrame
@@ -10,21 +10,47 @@ export class FramePrinter {
 
         this.frame = frame;
 
+        console.log(
+            "Print frame stored."
+        );
+
     }
 
     public async print(): Promise<void> {
 
-        if (!this.frame) {
-            return;
-        }
-
-        await new Promise(resolve =>
-            setTimeout(resolve, 300)
+        console.log(
+            "===== FramePrinter.print START ====="
         );
 
-        this.frame.window.focus();
+        if (!this.frame) {
+            throw new Error(
+                "Print frame has not been created."
+            );
+        }
 
-        this.frame.window.print();
+        const printWindow =
+            this.frame.window;
+
+        console.log(
+            "Print window:",
+            printWindow
+        );
+
+        printWindow.focus();
+
+        console.log(
+            "Calling window.print()"
+        );
+
+        printWindow.print();
+
+        console.log(
+            "window.print() completed"
+        );
+
+        console.log(
+            "===== FramePrinter.print END ====="
+        );
 
     }
 
@@ -36,7 +62,7 @@ export class FramePrinter {
 
         this.frame.iframe.remove();
 
-        this.frame = null;
+        this.frame = undefined;
 
     }
 
